@@ -1,0 +1,10 @@
+apis:
+  chuck_norris: ${CHUCK_JOKES_API|<chuck_jokes_api>}
+  dad_jokes: ${DAD_JOKES_API|<dad_jokes_api>}
+postgres:
+  schema: ${POSTGRES_SCHEMA|<postgres_schema>}
+  host: ${POSTGRES_HOST|<postgres_host>}
+  port: ${POSTGRES_PORT|<postgres_port>}
+  user: ${POSTGRES_USER|<postgres_user>}
+  password: ${POSTGRES_PASSWORD|<postgres_password>}
+  db_name:  ${POSTGRES_DB_NAME|<postgres_db_name>}

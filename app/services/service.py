@@ -1,9 +1,10 @@
+import math
 from typing import List
 
+from app.schemas.joke import JokeData
 from app.errors.service import JokeUpdateError
 from app.services.interfaces.service_in import IService
 from app.repository.interfaces.repository_in import IRepository
-from app.schemas.joke import JokeData
 
 from sqlalchemy.exc import DatabaseError
 
@@ -36,7 +37,10 @@ class Service(IService):
         self,
         numbers: List[int]
     ) -> int:
-        pass
+        lcm = numbers[0]
+        for i in range(1, len(numbers)):
+            lcm = lcm * numbers[i] // math.gcd(lcm, numbers[i])
+        return lcm
 
     async def add_on_to_number(self, number: int) -> int:
         return number + 1

@@ -1,6 +1,6 @@
 fastapi==0.75.2
 uvicorn[standard]==0.17.6
-asyncpg==2.8.6
+asyncpg==0.26.0
 psycopg2-binary==2.8.6
 sqlalchemy==1.4.36
 envyaml==1.6.201229

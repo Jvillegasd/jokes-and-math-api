@@ -1,0 +1,14 @@
+fastapi==0.75.2
+uvicorn[standard]==0.17.6
+asyncpg==2.8.6
+psycopg2-binary==2.8.6
+sqlalchemy==1.4.36
+envyaml==1.6.201229
+databases==0.5.5
+setuptools==49.6.0
+
+pytest==7.1.2
+pytest-mock==3.6.1
+pytest-asyncio==0.18.3
+pre-commit
+mypy

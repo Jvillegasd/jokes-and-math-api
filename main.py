@@ -1,19 +1,34 @@
+import traceback
 from typing import (
     Dict,
     Union,
-    Any
+    Any,
+    List
 )
 
 from app import __version__
 from app.services.service import Service
 from app.db.database import DataAccessLayer
 from app.repository.repository import Repository
+from app.schemas.joke import (
+    JokeData,
+    JokePhrase
+)
+from app.schemas.number import (
+    AddedNumber,
+    LeastCommonMultiple
+)
+from app.errors.repository import JokeResourceNotFound
+from app.errors.service import (
+    EmptyList,
+    JokeUpdateError
+)
 
 from fastapi import (
-    FastAPI
-    # HTTPException,
-    # Request,
-    # status
+    FastAPI,
+    HTTPException,
+    status,
+    Query
 )
 import aiohttp
 
@@ -33,15 +48,16 @@ app: FastAPI = FastAPI(
         'name': 'Johnny Villegas',
         'email': 'johnnyvillegaslrs@gmail.com'
     },
-    openapi_url=f'{BASE_PATH}/openapi.json',
-    docs_url=f'{BASE_PATH}/docs'
+    root_path=BASE_PATH,
+    openapi_url='/openapi.json',
+    docs_url='/docs'
 )
 http_joke_responses: Dict[Union[str, int], Dict[str, Any]] = {
     204: {
         'description': ''
     },
-    400: {
-        'description': 'Provided joke type is not allowed at the moment'
+    404: {
+        'description': 'Provided joke type is not found'
     },
     500: {
         'description': 'Something went wrong...'
@@ -74,3 +90,150 @@ async def startup():
 async def shutdown():
     await dal.database.disconnect()
     await session.close()
+
+
+@app.get(
+    '/joke/random',
+    tags=['joke'],
+    response_model=JokePhrase,
+    status_code=status.HTTP_200_OK,
+    responses=http_joke_responses
+)
+async def get_random_joke():
+    try:
+        joke = await service.get_random_joke()
+    except Exception:
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=500,
+            detail=http_joke_responses[500]['description']
+        )
+
+    return joke
+
+
+@app.get(
+    '/joke/random/{joke_resource}',
+    tags=['joke'],
+    response_model=JokePhrase,
+    status_code=status.HTTP_200_OK,
+    responses=http_joke_responses
+)
+async def get_joke_from_resource(joke_resource: str):
+    try:
+        joke = await service.get_joke_from_resource(joke_resource)
+    except JokeResourceNotFound:
+        raise HTTPException(
+            status_code=404,
+            detail=http_joke_responses[404]['description']
+        )
+    except Exception:
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=500,
+            detail=http_joke_responses[500]['description']
+        )
+
+    return joke
+
+
+@app.post(
+    '/joke',
+    tags=['jokes', 'crud'],
+    response_model=JokeData,
+    status_code=status.HTTP_201_CREATED,
+    response=http_joke_responses
+)
+async def create_joke(data: JokePhrase):
+    try:
+        new_joke = await service.create_joke(data.phrase)
+    except Exception:
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=500,
+            detail=http_joke_responses[500]['description']
+        )
+
+    return new_joke
+
+
+@app.patch(
+    '/joke/{joke_id}',
+    tags=['joke', 'crud'],
+    response_model=JokeData,
+    status_code=status.HTTP_200_OK,
+    responses=http_joke_responses
+)
+async def update_joke(joke_id: int, new_phrase: JokePhrase):
+    try:
+        updated_joke = await service.update_joke(joke_id, new_phrase.phrase)
+    except JokeUpdateError:
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=500,
+            detail=http_joke_responses[500]['description']
+        )
+
+    return updated_joke
+
+
+@app.delete(
+    '/joke/{joke_id}',
+    tags=['joke', 'crud'],
+    response_model=JokeData,
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses=http_joke_responses
+)
+async def delete_joke(joke_id: int):
+    await service.delete_joke(joke_id)
+
+
+@app.get(
+    '/joke',
+    tags=['joke', 'crud'],
+    response_model=List[JokeData],
+    status_code=status.HTTP_200_OK,
+    responses=http_joke_responses
+)
+async def get_saved_jokes():
+    return await service.get_jokes()
+
+
+@app.get(
+    '/math/add',
+    tags=['math'],
+    response_model=AddedNumber,
+    status_code=status.HTTP_200_OK,
+    responses=http_math_responses
+)
+async def add_one(number: int = 0):
+    try:
+        result = await service.add_one_to_number(number)
+    except ValueError:
+        raise HTTPException(
+            status_code=400,
+            detail=http_math_responses[400]['description']
+        )
+
+    return result
+
+
+@app.get(
+    '/math/lcm',
+    tags=['math'],
+    response_model=LeastCommonMultiple,
+    status_code=status.HTTP_200_OK,
+    responses=http_math_responses
+)
+async def least_common_multiple(
+    numbers: List[int] = Query(default=[], min_length=2)
+):
+    try:
+        lcm = await service.least_common_multiple(numbers)
+    except EmptyList:
+        raise HTTPException(
+            status_code=400,
+            detail=http_math_responses[400]['description']
+        )
+
+    return lcm

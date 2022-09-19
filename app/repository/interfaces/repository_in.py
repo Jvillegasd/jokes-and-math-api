@@ -60,14 +60,20 @@ class IRepository(ABC):
         """
 
     @abstractmethod
-    async def update_joke(self, updated_joke: JokeData) -> JokeData:
+    async def update_joke(self, joke_id: int, new_phrase: str) -> JokeData:
         """Update an already saved joke in database.
 
         Args:
-            -   updated_joke: JokeData = Joke information
+            -   joke_id: int = Existing joke id.
+            -   new_phrase: str = New phrase to replace in existing
+            joke row at database.
 
         Returns:
             -   JokeData: Joke data with updated information.
+
+        Exceptions:
+            - (Exception, DatabaseError): Exception raised when update
+            statement fails.
         """
 
     @abstractmethod

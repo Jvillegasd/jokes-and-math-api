@@ -2,7 +2,7 @@ from pydantic import BaseModel
 
 
 class JokeData(BaseModel):
-    joker_id: int
+    number: int
     phrase: str
 
 

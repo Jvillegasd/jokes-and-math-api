@@ -52,18 +52,25 @@ class Repository(IRepository):
         query = insert(Joke).values(phrase=phrase)
         last_record_id = await self.postgres_conn.execute(query)
         return JokeData(
-            joker_id=last_record_id,
+            number=last_record_id,
             phrase=phrase
         )
 
-    async def update_joke(self, updated_joke: JokeData) -> JokeData:
+    async def update_joke(
+        self,
+        joke_id: int,
+        new_joke_phrase: str
+    ) -> JokeData:
         query = (
             update(Joke).
-            where(Joke.joke_id == updated_joke.joker_id).
-            values(phrase=updated_joke.phrase)
+            where(Joke.joke_id == joke_id).
+            values(phrase=new_joke_phrase)
         )
         await self.postgres_conn.execute(query)
-        return updated_joke
+        return JokeData(
+            number=joke_id,
+            phrase=new_joke_phrase
+        )
 
     async def delete_joke(self, joke_id: int):
         query = (

@@ -6,5 +6,5 @@ class JokeData(BaseModel):
     phrase: str
 
 
-class JokerPhrase(BaseModel):
+class JokePhrase(BaseModel):
     phrase: str

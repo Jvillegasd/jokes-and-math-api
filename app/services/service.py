@@ -42,5 +42,5 @@ class Service(IService):
             lcm = lcm * numbers[i] // math.gcd(lcm, numbers[i])
         return lcm
 
-    async def add_on_to_number(self, number: int) -> int:
+    async def add_one_to_number(self, number: int) -> int:
         return number + 1

@@ -87,7 +87,7 @@ class IService(ABC):
         """
 
     @abstractmethod
-    async def add_on_to_number(self, number: int) -> int:
+    async def add_one_to_number(self, number: int) -> int:
         """Add 1 to provided number.
 
         Args:

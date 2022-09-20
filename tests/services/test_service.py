@@ -11,6 +11,7 @@ from app.errors.service import (
     EmptyList,
     InsufficientListSize
 )
+from app.errors.service import JokeUpdateError
 
 import pytest
 from pytest import mark
@@ -32,6 +33,17 @@ class TestService:
 
         assert type(result) == JokePhrase
         assert result.phrase == await self.some_joke()
+
+    @mark.asyncio
+    async def test__update_joke_fail(self, mocker):
+        repo_mock = mocker.Mock()
+        repo_mock.update_joke.side_effect = JokeUpdateError
+        service = Service(repo_mock)
+
+        some_joke_id: int = 1
+        some_phrase: str = 'testing'
+        with pytest.raises(JokeUpdateError):
+            await service.update_joke(some_joke_id, some_phrase)
 
     @mark.asyncio
     async def test__lcm(self, mocker):

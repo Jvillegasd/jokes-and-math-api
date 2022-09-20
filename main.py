@@ -13,7 +13,8 @@ from app.repository.repository import Repository
 from app.schemas.joke import (
     JokeData,
     JokePhrase,
-    JokeDatabase
+    JokeDatabase,
+    JokeResources
 )
 from app.schemas.number import (
     AddedNumber,
@@ -129,7 +130,7 @@ async def get_random_joke():
     status_code=status.HTTP_200_OK,
     responses=http_joke_responses
 )
-async def get_joke_from_resource(joke_resource: str):
+async def get_joke_from_resource(joke_resource: JokeResources):
     try:
         joke = await service.get_joke_from_resource(joke_resource)
     except JokeResourceNotFound:

@@ -8,9 +8,15 @@ class ChuckJokeAPI(IJokeApi):
 
     def __init__(self, session: aiohttp.ClientSession):
         config = Config()
-        super().__init__(config.get('apis.dad_jokes'), session)
+        super().__init__(config.get('apis.chuck_norris'), session)
 
     async def get_random_joke(self) -> str:
-        async with self.session.get(f'{self.base_url}/random') as response:
+        headers: dict = {
+            'Content-Type': 'application/json'
+        }
+        async with self.session.get(
+            f'{self.base_url}/random',
+            headers=headers
+        ) as response:
             result: dict = await response.json()
             return result['value']

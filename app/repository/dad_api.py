@@ -11,6 +11,12 @@ class DadJokeAPI(IJokeApi):
         super().__init__(config.get('apis.dad_jokes'), session)
 
     async def get_random_joke(self) -> str:
-        async with self.session.get(f'{self.base_url}/') as response:
+        headers: dict = {
+            'Accept': 'application/json'
+        }
+        async with self.session.get(
+            f'{self.base_url}/',
+            headers=headers
+        ) as response:
             result: dict = await response.json()
             return result['joke']

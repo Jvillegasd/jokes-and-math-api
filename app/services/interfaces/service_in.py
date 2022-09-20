@@ -2,8 +2,15 @@ from typing import List
 from abc import ABC, abstractmethod
 
 from app.repository.interfaces.repository_in import IRepository
-from app.schemas.joke import JokeData
+from app.schemas.joke import (
+    JokeData,
+    JokePhrase
+)
 from app.models.joke import Joke
+from app.schemas.number import (
+    AddedNumber,
+    LeastCommonMultiple
+)
 
 
 class IService(ABC):
@@ -12,7 +19,7 @@ class IService(ABC):
         self.repository = repository
 
     @abstractmethod
-    async def get_random_joke(self) -> str:
+    async def get_random_joke(self) -> JokePhrase:
         """Get a random joke by choosing one from
         'jokes_resources' dict.
 
@@ -21,7 +28,7 @@ class IService(ABC):
         """
 
     @abstractmethod
-    async def get_joke_from_resource(self, resource: str) -> str:
+    async def get_joke_from_resource(self, resource: str) -> JokePhrase:
         """Get a joke from choosed resource. This resource
         name needs to belong to 'joker_resources' dict keys.
 
@@ -85,7 +92,7 @@ class IService(ABC):
     async def least_common_multiple(
         self,
         numbers: List[int]
-    ) -> int:
+    ) -> LeastCommonMultiple:
         """Calculate the LCM (Least Common Multiple) of provided
         list of numbers.
 
@@ -93,16 +100,16 @@ class IService(ABC):
             -   numbers: List[int] = List of number to calculate LCM.
 
         Returns:
-            -   int: LCM result.
+            -   LeastCommonMultiple: LCM result.
         """
 
     @abstractmethod
-    async def add_one_to_number(self, number: int) -> int:
+    async def add_one_to_number(self, number: int) -> AddedNumber:
         """Add 1 to provided number.
 
         Args:
             -   number: int = Number to add.
 
         Returns:
-            -   int: Provided number plus one.
+            -   AddedNumber: Provided number plus one.
         """

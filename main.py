@@ -95,15 +95,16 @@ async def shutdown():
 @app.get(
     '/',
     tags=['entrypoint'],
+    response_model=Dict[str, str],
     status_code=status.HTTP_200_OK
 )
 async def entrypoint():
-    return {'message', '🚀 @ Server is up!'}
+    return {'message': '🚀 @ Server is up!'}
 
 
 @app.get(
     '/joke/random',
-    tags=['joke'],
+    tags=['random-joke'],
     response_model=JokePhrase,
     status_code=status.HTTP_200_OK,
     responses=http_joke_responses
@@ -123,7 +124,7 @@ async def get_random_joke():
 
 @app.get(
     '/joke/random/{joke_resource}',
-    tags=['joke'],
+    tags=['random-joke'],
     response_model=JokePhrase,
     status_code=status.HTTP_200_OK,
     responses=http_joke_responses
@@ -148,7 +149,7 @@ async def get_joke_from_resource(joke_resource: str):
 
 @app.post(
     '/joke',
-    tags=['jokes', 'crud'],
+    tags=['joke-crud'],
     response_model=JokeData,
     status_code=status.HTTP_201_CREATED,
     responses=http_joke_responses
@@ -168,7 +169,7 @@ async def create_joke(data: JokePhrase):
 
 @app.patch(
     '/joke/{joke_id}',
-    tags=['joke', 'crud'],
+    tags=['joke-crud'],
     response_model=JokeData,
     status_code=status.HTTP_200_OK,
     responses=http_joke_responses
@@ -188,7 +189,7 @@ async def update_joke(joke_id: int, new_phrase: JokePhrase):
 
 @app.delete(
     '/joke/{joke_id}',
-    tags=['joke', 'crud'],
+    tags=['joke-crud'],
     status_code=status.HTTP_204_NO_CONTENT
 )
 async def delete_joke(joke_id: int):
@@ -197,7 +198,7 @@ async def delete_joke(joke_id: int):
 
 @app.get(
     '/joke',
-    tags=['joke', 'crud'],
+    tags=['joke-crud'],
     response_model=List[JokeDatabase],
     status_code=status.HTTP_200_OK,
     responses=http_joke_responses

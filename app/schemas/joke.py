@@ -1,4 +1,6 @@
 import datetime
+from enum import Enum
+
 from pydantic import BaseModel
 
 
@@ -16,3 +18,8 @@ class JokeDatabase(BaseModel):
     phrase: str
     created_at = datetime.datetime
     updated_at = datetime.datetime
+
+
+class JokeResources(str, Enum):
+    dad = "Dad"
+    chuck = "Chuck"

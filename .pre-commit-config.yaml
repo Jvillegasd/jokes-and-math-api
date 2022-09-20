@@ -9,14 +9,14 @@ repos:
     hooks:
       - id: mypy
 
-  # - repo: local
-  #   hooks:
-  #     - id: pytest
-  #       name: pytest
-  #       entry:  venv/bin/pytest -vvv
-  #       language: script
-  #       pass_filenames: false
-  #       # alternative you could `types: [python] so it only runs when python files change`
-  #       # though tests might be invalidated if you were to say change a data file
-  #       always_run: true
-  #       stages: [commit, push]
+  - repo: local
+    hooks:
+      - id: pytest
+        name: pytest
+        entry:  venv/bin/pytest -vvv
+        language: script
+        pass_filenames: false
+        # alternative you could `types: [python] so it only runs when python files change`
+        # though tests might be invalidated if you were to say change a data file
+        always_run: true
+        stages: [commit, push]

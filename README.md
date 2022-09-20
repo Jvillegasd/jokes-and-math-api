@@ -192,21 +192,27 @@ class  Main  {
 
   
 
++startup()
+
++shutdown()
+
++entrypoint() Dict(str, str)
+
 +get_random_joke()  JokePhrase
 
-+get_joke_from_resource(resource:  str)  JokePhrase
++get_joke_from_resource(joke_resource: JokeResources)  JokePhrase
 
-+create_joke(phrase:  str)  JokeData
++create_joke(data: JokePhrase)  JokeData
 
-+update_joke(joke_id:  int, new_phrase:  str)  JokeData
++update_joke(joke_id: int, new_phrase: JokePhrase)  JokeData
 
 +delete_joke(joke_id:  int)
 
-+get_jokes()  List(JokeDatabase)
++get_saved_jokes()  List(JokeDatabase)
 
-+least_common_multiple(numbers:  List[int])  LeastCommonMultiple
++least_common_multiple(numbers: List[int] = Query(default=[])  LeastCommonMultiple
 
-+add_one_to_number(number:  int)  AddedNumber
++add_one(number: int = 0)  AddedNumber
 
 }
 

@@ -2,12 +2,14 @@ fastapi == 0.75.2
 uvicorn[standard] == 0.17.6
 pydantic == 1.10.2
 aiohttp[speedups] == 3.8.1
+envyaml == 1.6.201229
+setuptools == 49.6.0
+
 asyncpg == 0.26.0
 psycopg2-binary == 2.8.6
 sqlalchemy == 1.4.36
-envyaml == 1.6.201229
 databases == 0.5.5
-setuptools == 49.6.0
+alembic == 1.8.1
 
 pytest == 7.1.2
 pytest-mock == 3.6.1

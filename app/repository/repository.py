@@ -82,4 +82,7 @@ class Repository(IRepository):
     async def get_jokes(self) -> List[Joke]:
         query = select(Joke)
         results = await self.postgres_conn.fetch_all(query)
-        return results
+        return [
+            Joke(**row)
+            for row in results
+        ]

@@ -1,6 +1,18 @@
+import math
+from typing import List
+
 from app.schemas.joke import JokePhrase
 from app.services.service import Service
+from app.schemas.number import (
+    LeastCommonMultiple,
+    AddedNumber
+)
+from app.errors.service import (
+    EmptyList,
+    InsufficientListSize
+)
 
+import pytest
 from pytest import mark
 
 
@@ -20,3 +32,43 @@ class TestService:
 
         assert type(result) == JokePhrase
         assert result.phrase == await self.some_joke()
+
+    @mark.asyncio
+    async def test__lcm(self, mocker):
+        repo_mock = mocker.Mock()
+        service = Service(repo_mock)
+
+        numbers: List[int] = [1, 2, 3, 4]
+        expected_lcm: int = math.lcm(*numbers)
+
+        result = await service.least_common_multiple(numbers)
+        assert type(result) == LeastCommonMultiple
+        assert result.lcm == expected_lcm
+
+    @mark.asyncio
+    async def test__lcm_insufficient_size_fail(self, mocker):
+        repo_mock = mocker.Mock()
+        service = Service(repo_mock)
+
+        numbers: List[int] = [1]
+        with pytest.raises(InsufficientListSize):
+            await service.least_common_multiple(numbers)
+
+    @mark.asyncio
+    async def test__lcm_empty_list_fail(self, mocker):
+        repo_mock = mocker.Mock()
+        service = Service(repo_mock)
+
+        numbers: List[int] = []
+        with pytest.raises(EmptyList):
+            await service.least_common_multiple(numbers)
+
+    @mark.asyncio
+    async def test__add_one_to_number(self, mocker):
+        repo_mock = mocker.Mock()
+        service = Service(repo_mock)
+
+        number: int = 1
+        result = await service.add_one_to_number(number)
+        assert type(result) == AddedNumber
+        assert result.number == number + 1

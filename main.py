@@ -95,6 +95,15 @@ async def shutdown():
 
 
 @app.get(
+    '/',
+    tags=['entrypoint'],
+    status_code=status.HTTP_200_OK
+)
+async def entrypoint():
+    return {'message', '🚀 @ Server is up!'}
+
+
+@app.get(
     '/joke/random',
     tags=['joke'],
     response_model=JokePhrase,

@@ -9,7 +9,7 @@ from app.models.joke import Joke
 class IService(ABC):
 
     def __init__(self, repository: IRepository):
-        self.respository = repository
+        self.repository = repository
 
     @abstractmethod
     async def get_random_joke(self) -> str:

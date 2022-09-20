@@ -1,0 +1,40 @@
+version: '3.7'
+
+services:
+  database:
+    image: postgres
+    container_name: db-jokes-pg
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB_NAME}
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    networks:
+      - jokes_network
+
+  api:
+    build: .
+    env_file:
+      - .env
+    container_name: api-jokes
+    restart: always
+    volumes:
+      - .:/src
+    ports:
+      - "${API_PORT}:${API_PORT}"
+    networks:
+      - jokes_network
+    depends_on:
+      - database
+
+volumes:
+  db-data:
+
+networks:
+  jokes_network:
+    driver: bridge

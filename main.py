@@ -12,7 +12,8 @@ from app.db.database import DataAccessLayer
 from app.repository.repository import Repository
 from app.schemas.joke import (
     JokeData,
-    JokePhrase
+    JokePhrase,
+    JokeDatabase
 )
 from app.schemas.number import (
     AddedNumber,
@@ -21,7 +22,8 @@ from app.schemas.number import (
 from app.errors.repository import JokeResourceNotFound
 from app.errors.service import (
     EmptyList,
-    JokeUpdateError
+    JokeUpdateError,
+    InsufficientListSize
 )
 
 from fastapi import (
@@ -142,7 +144,7 @@ async def get_joke_from_resource(joke_resource: str):
     tags=['jokes', 'crud'],
     response_model=JokeData,
     status_code=status.HTTP_201_CREATED,
-    response=http_joke_responses
+    responses=http_joke_responses
 )
 async def create_joke(data: JokePhrase):
     try:
@@ -180,9 +182,7 @@ async def update_joke(joke_id: int, new_phrase: JokePhrase):
 @app.delete(
     '/joke/{joke_id}',
     tags=['joke', 'crud'],
-    response_model=JokeData,
-    status_code=status.HTTP_204_NO_CONTENT,
-    responses=http_joke_responses
+    status_code=status.HTTP_204_NO_CONTENT
 )
 async def delete_joke(joke_id: int):
     await service.delete_joke(joke_id)
@@ -191,7 +191,7 @@ async def delete_joke(joke_id: int):
 @app.get(
     '/joke',
     tags=['joke', 'crud'],
-    response_model=List[JokeData],
+    response_model=List[JokeDatabase],
     status_code=status.HTTP_200_OK,
     responses=http_joke_responses
 )
@@ -226,11 +226,11 @@ async def add_one(number: int = 0):
     responses=http_math_responses
 )
 async def least_common_multiple(
-    numbers: List[int] = Query(default=[], min_length=2)
+    numbers: List[int] = Query(default=[])
 ):
     try:
         lcm = await service.least_common_multiple(numbers)
-    except EmptyList:
+    except (EmptyList, InsufficientListSize):
         raise HTTPException(
             status_code=400,
             detail=http_math_responses[400]['description']

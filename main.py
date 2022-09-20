@@ -35,7 +35,6 @@ from fastapi import (
 import aiohttp
 
 
-BASE_PATH: str = '/api/v1'
 description: str = """
 SquadMakers test API
 Get jokes from 3rd party APIs and manages them,
@@ -50,7 +49,6 @@ app: FastAPI = FastAPI(
         'name': 'Johnny Villegas',
         'email': 'johnnyvillegaslrs@gmail.com'
     },
-    root_path=BASE_PATH,
     openapi_url='/openapi.json',
     docs_url='/docs'
 )

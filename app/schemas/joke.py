@@ -1,5 +1,5 @@
-import datetime
 from enum import Enum
+from datetime import date
 
 from pydantic import BaseModel
 
@@ -16,8 +16,8 @@ class JokePhrase(BaseModel):
 class JokeDatabase(BaseModel):
     joke_id: int
     phrase: str
-    created_at = datetime.datetime
-    updated_at = datetime.datetime
+    created_at: date
+    updated_at: date
 
     class Config:
         orm_mode = True

@@ -24,12 +24,14 @@ def upgrade() -> None:
         sa.Column(
             'created_at',
             sa.DateTime(timezone=True),
-            default=sa.func.now()
+            default=sa.func.now(),
+            nullable=False
         ),
         sa.Column(
             'updated_at',
             sa.DateTime(timezone=True),
-            default=sa.func.now()
+            default=sa.func.now(),
+            nullable=False
         ),
         sa.PrimaryKeyConstraint('joke_id', name=op.f('pk_joke')),
     )

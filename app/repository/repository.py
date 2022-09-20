@@ -3,6 +3,7 @@ from typing import (
     Dict,
     List
 )
+from datetime import datetime
 
 from app.models.joke import Joke
 from app.schemas.joke import JokeData
@@ -49,7 +50,14 @@ class Repository(IRepository):
         return await self.jokes_resources[resource].get_random_joke()
 
     async def create_joke(self, phrase: str) -> JokeData:
-        query = insert(Joke).values(phrase=phrase)
+        query = (
+            insert(Joke).
+            values(
+                phrase=phrase,
+                created_at=datetime.now(),
+                updated_at=datetime.now()
+            )
+        )
         last_record_id = await self.postgres_conn.execute(query)
         return JokeData(
             number=last_record_id,
@@ -64,7 +72,10 @@ class Repository(IRepository):
         query = (
             update(Joke).
             where(Joke.joke_id == joke_id).
-            values(phrase=new_joke_phrase)
+            values(
+                phrase=new_joke_phrase,
+                updated_at=datetime.now()
+            )
         )
         await self.postgres_conn.execute(query)
         return JokeData(

@@ -1,10 +1,10 @@
 from typing import List
 
-from app.repository.repository import Repository
-# from app.errors.repository import JokeResourceNotFound
 from app.schemas.joke import JokeData
+from app.repository.repository import Repository
+from app.errors.repository import JokeResourceNotFound
 
-# import pytest
+import pytest
 import aiohttp
 from pytest import mark
 
@@ -19,6 +19,16 @@ class TestRepository:
             {'joke_id': 1, 'phrase': 'joke 1'},
             {'joke_id': 2, 'phrase': 'joke 2'}
         ]
+
+    @mark.asyncio
+    async def test__get_joke_from_resource_fail(self, mocker):
+        session = aiohttp.ClientSession()
+        postgres_conn = mocker.Mock()
+        repo = Repository(postgres_conn, session)
+
+        unknown_joke_res: str = 'Just a unknown resource'
+        with pytest.raises(JokeResourceNotFound):
+            await repo.get_joke_from_resource(unknown_joke_res)
 
     @mark.asyncio
     async def test__create_joke(self, mocker):
